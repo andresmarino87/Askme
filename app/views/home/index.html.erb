@@ -3,10 +3,70 @@
 	<p>Find me in app/views/home/index.html.erb</p>
 
 	<div data-ng-controller="questionCtrl">
-	    <li data-ng-repeat="item in questions">
-	        <p >
-	        	{{item.id}} {{item.question}}
-	    	</p>
-		</li>
-	</div>
+		<div class="row">
+			<div>
+				<form name="registrationForm" ng-submit="sign_up()">
+					<div class="form-group">
+						<label>Email</label>
+						<input type="email" name="email" class="form-control" ng-model="user.email" required>
+						<span ng-show="errorLoginEmail">{{errorLoginEmail}}</span>
+						<label>Password</label>
+						<input type="password" name="password" class="form-control" ng-model="user.password" required>
+						<span ng-show="errorLoginPass">{{errorLoginPass}}</span>
+						<label>ConfirmPassword</label>
+						<input type="password" name="confirmPassword" class="form-control" ng-model="user.confirm_password" required>
+						<span ng-show="errorLoginPass">{{errorLoginPass}}</span>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+
+
+				<form name="loginForm" ng-submit="login()">
+					<div class="form-group">
+						<label>Email</label>
+						<input type="email" name="email" class="form-control" ng-model="user.email" required>
+						<span ng-show="errorLoginEmail">{{errorLoginEmail}}</span>
+						<label>Password</label>
+						<input type="password" name="password" class="form-control" ng-model="user.password" required>
+						<span ng-show="errorLoginPass">{{errorLoginPass}}</span>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+				<button ng-click="logout()">Log out</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6 col-md-4">
+				<h2>Questions</h2>
+				<form name="questionForm" ng-submit="askQuestion()">
+					<div class="form-group">
+						<label>Question</label>
+						<input type="text" name="question" class="form-control" ng-model="question.question" required>
+						<span ng-show="errorQuestion">{{errorQuestion}}</span>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+
+				<li data-ng-repeat="item in questions" >
+					<p ng-click="viewAnswers(item)">
+						{{item.id}} {{item.question}}
+					</p>
+				</li>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-8">
+				<h2>Answers</h2>
+				<form name="answerForm" ng-submit="answerQuestion()">
+					<div class="form-group">
+						<label>Answer</label>
+						<input type="text" name="answer" class="form-control" ng-model="answer.answer" required>
+						<span ng-show="errorQuestion">{{errorAnswer}}</span>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+				<li data-ng-repeat="answer in answers">
+					{{answer.answer}}
+				</li>
+			</div>
+
+		</div>
 </div>

@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
 #    before_filter :authenticate_user!, only: [:create]
+	skip_before_action :verify_authenticity_token
 	respond_to :json
 	
     def index
@@ -13,12 +14,8 @@ class QuestionsController < ApplicationController
     end
 
     def create
-        byebug
-        @questions = current_user.questions.new(question_params)
-        byebug
-        user_signed_in?
-
-        if @questions
+        @questions = current_user.questions.new question_params
+        if @questions.save
             render json: @questions, status: 201
         else
             render json: @questions.errors, status: 422
