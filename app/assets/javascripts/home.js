@@ -182,7 +182,7 @@ app.controller('questionCtrl',
 		var jsonParams = JSON.stringify(params);
 		if($scope.question){
 			askQuestionService.postQuestion(function(dataResponse){
-				$scope.questions.push(dataResponse.data);
+				$scope.questions.unshift(dataResponse.data);
 			},jsonParams);
 		}else{
 			$scope.errorQuestion = "The question can't be empty!."
@@ -194,7 +194,7 @@ app.controller('questionCtrl',
 		params["answer"] = $scope.answer;
 		var jsonParams = JSON.stringify(params);
 		answerQuestionService.postAnswer(function(dataResponse){
-			$scope.answers.push(dataResponse.data);
+			$scope.answers.unshift(dataResponse.data);
 		},$scope.questionSelected.id,jsonParams);
 	};
 }]);
