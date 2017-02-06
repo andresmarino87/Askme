@@ -1,8 +1,8 @@
 var app = angular.module('askme', []);
 
 app.constant('config', {
-	"URL": "https://askme-ruby.herokuapp.com/",
-//	"URL": "http://localhost:3000/",
+	//"URL": "https://askme-ruby.herokuapp.com/",
+	"URL": "http://localhost:3000/",
 });
 
 app.service('getQuestionsService',['$http', 'config', function($http, config) {
@@ -11,8 +11,10 @@ app.service('getQuestionsService',['$http', 'config', function($http, config) {
 			method: 'GET',
 			url: config.URL+'questions',
 		}).then(function (success){
+			console.log(success);
 			callbackFunc(success);
 		}, function (error){
+			console.log(error);
 			alert("error");
 		});
 	};
@@ -35,10 +37,10 @@ app.service('signupService',['$http', 'config', function($http, config) {
 	this.signup = function(callbackFunc, user) {
 		$http({
 			method: 'POST',
-		    headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json'},
 			url: config.URL+'users.json',
 			data: user,
-		    dataType: 'json',
+			dataType: 'json',
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
@@ -53,14 +55,23 @@ app.service('loginService',['$http', 'config', function($http, config) {
 	this.login = function(callbackFunc, user) {
 		$http({
 			method: 'POST',
-		    headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json'},
 			url: config.URL+'users/sign_in.json',
 			data: user,
-		    dataType: 'json',
+			dataType: 'json',
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
-			console.log(error);
+			if(status == 401){
+				console.log(error.data);
+
+			}else if(status == 400){
+				console.log(error.c);
+			}else{
+
+			}
+			console.log(error.status);
+
 			alert("error");
 		});
 	};
@@ -70,7 +81,7 @@ app.service('logoutService',['$http', 'config', function($http, config) {
 	this.logout = function(callbackFunc) {
 		$http({
 			method: 'DELETE',
-		    headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json'},
 			url: config.URL+'users/sign_out.json',
 		}).then(function (success){
 			callbackFunc(success);
@@ -85,10 +96,10 @@ app.service('askQuestionService',['$http', 'config', function($http, config) {
 	this.postQuestion = function(callbackFunc, question) {
 		$http({
 			method: 'POST',
-		    headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json'},
 			url: config.URL+'questions/',
 			data: question,
-		    dataType: 'json',
+			dataType: 'json',
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
@@ -103,10 +114,10 @@ app.service('answerQuestionService',['$http', 'config', function($http, config) 
 		console.log(question);
 		$http({
 			method: 'POST',
-		    headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json'},
 			url: config.URL+'questions/'+id+'/answers/',
 			data: question,
-		    dataType: 'json',
+			dataType: 'json',
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
@@ -141,6 +152,7 @@ app.controller('questionCtrl',
 		console.log();
 		signupService.signup(function(dataResponse){
 			console.log(dataResponse);
+			angular.element(document).triggerHandler('click');
 		},jsonString);
 	};
 
@@ -151,7 +163,10 @@ app.controller('questionCtrl',
 		var jsonString= JSON.stringify(obj);
 		loginService.login(function(dataResponse){
 			console.log(dataResponse);
+			angular.element(document).triggerHandler('click');
 		},jsonString);
+		$( '#login_menu' ).toggleClass('open');
+
 	};
 
 	$scope.logout = function() {
