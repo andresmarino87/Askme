@@ -90,7 +90,7 @@
 				<h2>Questions</h2>
 				<form name="questionForm" ng-submit="askQuestion()">
 					<div class="input-group">
-						<input type="text" name="question" class="form-control" ng-model="question.question" maxlength="300" required>
+						<input type="text" name="question" class="form-control" ng-model="question.question" maxlength="300" placeholder="Write a Question" required>
 						<span class="input-group-btn">
 							<button type="submit" class="btn btn-primary">Ask!</button>
 						</span>
@@ -110,7 +110,7 @@
 				<h2>Answers</h2>
 				<form name="answerForm" ng-submit="answerQuestion()" data-ng-show="questionSelected">
 					<div class="input-group">
-						<input type="text" name="answer" class="form-control" ng-model="answer.answer" maxlength="5000" required>
+						<input type="text" name="answer" class="form-control" ng-model="answer.answer" maxlength="5000" placeholder="Write an Answer" required>
 						<span class="input-group-btn">
 							<button type="submit" class="btn btn-primary">Answer!</button>
 						</span>
