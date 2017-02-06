@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-#    before_filter :authenticate_user!, only: [:create]
+    before_action :authenticate_user!, only: [:create]
 	skip_before_action :verify_authenticity_token
 	respond_to :json
 	
