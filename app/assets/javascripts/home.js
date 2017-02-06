@@ -1,9 +1,34 @@
 var app = angular.module('askme', []);
 
 app.constant('config', {
-	"URL": "https://askme-ruby.herokuapp.com/",
-//	"URL": "http://localhost:3000/",
+//	"URL": "https://askme-ruby.herokuapp.com/",
+	"URL": "http://localhost:3000/",
 });
+
+app.directive('validPasswordC', function() {
+  return {
+    require: 'ngModel',
+    scope: {
+
+      reference: '=validPasswordC'
+
+    },
+    link: function(scope, elm, attrs, ctrl) {
+      ctrl.$parsers.unshift(function(viewValue, $scope) {
+
+        var noMatch = viewValue != scope.reference
+        ctrl.$setValidity('noMatch', !noMatch);
+        return (noMatch)?noMatch:!noMatch;
+      });
+
+      scope.$watch("reference", function(value) {;
+        ctrl.$setValidity('noMatch', value === ctrl.$viewValue);
+
+      });
+    }
+  }
+});
+
 
 app.service('getQuestionsService',['$http', 'config', function($http, config) {
 	this.getData = function(callbackFunc) {
@@ -62,7 +87,7 @@ app.service('loginService',['$http', 'config', function($http, config) {
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
-			if(status == 401){
+			if(error.status == 401){
 				console.log(error.data);
 
 			}else if(status == 400){
@@ -93,7 +118,7 @@ app.service('logoutService',['$http', 'config', function($http, config) {
 }]);
 
 app.service('askQuestionService',['$http', 'config', function($http, config) {
-	this.postQuestion = function(callbackFunc, question) {
+	this.postQuestion = function(callbackFunc, question, $scope ) {
 		$http({
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json'},
@@ -103,14 +128,23 @@ app.service('askQuestionService',['$http', 'config', function($http, config) {
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
-			console.log(error);
-			alert("error");
+			switch(error.status){
+				case 400:
+					$scope.errorAnswer = 'Bad request please try again!';
+					break;
+				case 401:
+					$scope.errorQuestion = 'Must logged in to do this operation';
+					break;
+				default:
+					$scope.errorQuestion = 'Something went wrong!';
+					break;
+			}
 		});
 	};
 }]);
 
 app.service('answerQuestionService',['$http', 'config', function($http, config) {
-	this.postAnswer = function(callbackFunc, id, question) {
+	this.postAnswer = function(callbackFunc, id, question, $scope) {
 		console.log(question);
 		$http({
 			method: 'POST',
@@ -121,8 +155,17 @@ app.service('answerQuestionService',['$http', 'config', function($http, config) 
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
-			console.log(error);
-			alert("error");
+			switch(error.status){
+				case 400:
+					$scope.errorAnswer = 'Bad request please try again!';
+					break;
+				case 401:
+					$scope.errorAnswer = 'Must logged in to do this operation';
+					break;
+				default:
+					$scope.errorAnswer = 'Something went wrong!';
+					break;
+			}
 		});
 	};
 }]);
@@ -183,18 +226,19 @@ app.controller('questionCtrl',
 		if($scope.question){
 			askQuestionService.postQuestion(function(dataResponse){
 				$scope.questions.unshift(dataResponse.data);
-			},jsonParams);
+			},jsonParams, $scope);
 		}else{
 			$scope.errorQuestion = "The question can't be empty!."
 		}
 	};
 
 	$scope.answerQuestion = function(){
+		$scope.errorAnswer = "";
 		var params = {};
 		params["answer"] = $scope.answer;
 		var jsonParams = JSON.stringify(params);
 		answerQuestionService.postAnswer(function(dataResponse){
 			$scope.answers.unshift(dataResponse.data);
-		},$scope.questionSelected.id,jsonParams);
+		},$scope.questionSelected.id,jsonParams, $scope);
 	};
 }]);
