@@ -4,6 +4,6 @@ class SessionsController < Devise::SessionsController
 	respond_to :json
 
 	def new
-  		super
+		super
 	end
 end
