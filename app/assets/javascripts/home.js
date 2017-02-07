@@ -185,14 +185,30 @@ app.controller('questionCtrl',
 	};
 
 	$scope.sign_up = function() {
+		$scope.errorRegEmail = "";
+		$scope.errorRegPass = "";
+		$scope.errorConfirmPass = "";
+
 		var obj = {};
 		obj["user"] = $scope.user;
 		var jsonString= JSON.stringify(obj);
-		signupService.signup(function(dataResponse){
-			angular.element(document).triggerHandler('click');
-		},jsonString, $scope);
+		if(!$scope.user.email){
+			$scope.errorRegEmail = "The email can't be empty!.";
+		}else if(!$scope.user.password){
+			$scope.errorRegPass = "The password can't be empty!.";
+		}else if(!$scope.user.confirm_password){
+			$scope.errorConfirmPass = "The confirm password can't be empty!.";
+		}else if($scope.user.password != $scope.user.confirm_password){
+			$scope.errorConfirmPass = "The passwords do not match!.";
+		}else{
+			signupService.signup(function(dataResponse){
+				angular.element(document).triggerHandler('click');
+				$scope.user.email = '';
+				$scope.user.password = '';
+				$scope.user.confirm_password = "";
+			},jsonString, $scope);
+		}
 	};
-
 
 	$scope.login = function() {
 		$scope.errorLoginEmail = "";
@@ -201,14 +217,14 @@ app.controller('questionCtrl',
 		obj["user"] = $scope.user;
 		var jsonString= JSON.stringify(obj);
 		if(!$scope.user.email){
-			$scope.errorLoginEmail = "The email can't be empty!."
+			$scope.errorLoginEmail = "The email can't be empty!.";
 		}else if(!$scope.user.password){
-			$scope.errorLoginPass = "The password can't be empty!."
+			$scope.errorLoginPass = "The password can't be empty!.";
 		}else{
 			loginService.login(function(dataResponse){
 				angular.element(document).triggerHandler('click');
-				$scope.user['email'] = '';
-				$scope.user['email'] = '';
+				$scope.user.email = '';
+				$scope.user.password = '';
 			},jsonString,$scope);
 			$( '#login_menu' ).toggleClass('open');
 		}
@@ -228,9 +244,10 @@ app.controller('questionCtrl',
 		if($scope.question){
 			askQuestionService.postQuestion(function(dataResponse){
 				$scope.questions.unshift(dataResponse.data);
+				$scope.question = '';
 			},jsonParams, $scope);
 		}else{
-			$scope.errorQuestion = "The question can't be empty!."
+			$scope.errorQuestion = "The question can't be empty!.";
 		}
 	};
 
@@ -239,8 +256,13 @@ app.controller('questionCtrl',
 		var params = {};
 		params["answer"] = $scope.answer;
 		var jsonParams = JSON.stringify(params);
-		answerQuestionService.postAnswer(function(dataResponse){
-			$scope.answers.unshift(dataResponse.data);
-		},$scope.questionSelected.id,jsonParams, $scope);
+		if($scope.answer){
+			answerQuestionService.postAnswer(function(dataResponse){
+				$scope.answers.unshift(dataResponse.data);
+				$scope.answer = "";
+			},$scope.questionSelected.id,jsonParams, $scope);
+		}else{
+			$scope.errorAnswer = "The answer can't be empty!.";
+		}
 	};
 }]);
