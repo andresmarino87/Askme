@@ -5,42 +5,16 @@ app.constant('config', {
 //	"URL": "http://localhost:3000/",
 });
 
-app.directive('validPasswordC', function() {
-  return {
-    require: 'ngModel',
-    scope: {
-
-      reference: '=validPasswordC'
-
-    },
-    link: function(scope, elm, attrs, ctrl) {
-      ctrl.$parsers.unshift(function(viewValue, $scope) {
-
-        var noMatch = viewValue != scope.reference
-        ctrl.$setValidity('noMatch', !noMatch);
-        return (noMatch)?noMatch:!noMatch;
-      });
-
-      scope.$watch("reference", function(value) {;
-        ctrl.$setValidity('noMatch', value === ctrl.$viewValue);
-
-      });
-    }
-  }
-});
-
-
 app.service('getQuestionsService',['$http', 'config', function($http, config) {
 	this.getData = function(callbackFunc) {
 		$http({
 			method: 'GET',
+			headers: { 'Content-Type': 'application/json'},
 			url: config.URL+'questions',
 		}).then(function (success){
-			console.log(success);
 			callbackFunc(success);
 		}, function (error){
 			console.log(error);
-			alert("error");
 		});
 	};
 }]);
@@ -49,17 +23,18 @@ app.service('getAnswersService',['$http', 'config', function($http, config) {
 	this.getAnswers = function(callbackFunc, id) {
 		$http({
 			method: 'GET',
+			headers: { 'Content-Type': 'application/json'},
 			url: config.URL+'questions/'+id
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
-			alert("error");
+			console.log(error);
 		});
 	};
 }]);
 
 app.service('signupService',['$http', 'config', function($http, config) {
-	this.signup = function(callbackFunc, user) {
+	this.signup = function(callbackFunc, user, $scope) {
 		$http({
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json'},
@@ -69,15 +44,24 @@ app.service('signupService',['$http', 'config', function($http, config) {
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
-			console.log(error);
-			alert("error");
+			switch(error.status){
+				case 401:
+					$scope.errorLoginPass = "Invalid parameters";
+					break;
+				case 400:
+					$scope.errorLoginPass = "Invalid parameters";
+					break;
+				default:
+					$scope.errorQuestion = 'Something went wrong!';
+					break;
+			}
 		});
 	};
 }]);
 
 
 app.service('loginService',['$http', 'config', function($http, config) {
-	this.login = function(callbackFunc, user) {
+	this.login = function(callbackFunc, user, $scope) {
 		$http({
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json'},
@@ -87,17 +71,17 @@ app.service('loginService',['$http', 'config', function($http, config) {
 		}).then(function (success){
 			callbackFunc(success);
 		}, function (error){
-			if(error.status == 401){
-				console.log(error.data);
-
-			}else if(status == 400){
-				console.log(error.c);
-			}else{
-
+			switch(error.status){
+				case 401:
+					$scope.errorLoginPass = "Wrong email or password.";
+					break;
+				case 400:
+					$scope.errorLoginPass = "Wrong email or password.";
+					break;
+				default:
+					$scope.errorQuestion = 'Something went wrong!';
+					break;
 			}
-			console.log(error.status);
-
-			alert("error");
 		});
 	};
 }]);
@@ -112,7 +96,6 @@ app.service('logoutService',['$http', 'config', function($http, config) {
 			callbackFunc(success);
 		}, function (error){
 			console.log(error);
-			alert("error");
 		});
 	};
 }]);
@@ -145,10 +128,11 @@ app.service('askQuestionService',['$http', 'config', function($http, config) {
 
 app.service('answerQuestionService',['$http', 'config', function($http, config) {
 	this.postAnswer = function(callbackFunc, id, question, $scope) {
-		console.log(question);
 		$http({
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json',
+				'X-CSRFToken':$('meta[name=csrf-token]').attr('content')
+			},
 			url: config.URL+'questions/'+id+'/answers/',
 			data: question,
 			dataType: 'json',
@@ -192,29 +176,35 @@ app.controller('questionCtrl',
 		var obj = {};
 		obj["user"] = $scope.user;
 		var jsonString= JSON.stringify(obj);
-		console.log();
 		signupService.signup(function(dataResponse){
-			console.log(dataResponse);
 			angular.element(document).triggerHandler('click');
-		},jsonString);
+		},jsonString, $scope);
 	};
 
 
 	$scope.login = function() {
+		$scope.errorLoginEmail = "";
+		$scope.errorLoginPass = "";
 		var obj = {};
 		obj["user"] = $scope.user;
 		var jsonString= JSON.stringify(obj);
-		loginService.login(function(dataResponse){
-			console.log(dataResponse);
-			angular.element(document).triggerHandler('click');
-		},jsonString);
-		$( '#login_menu' ).toggleClass('open');
+		if(!$scope.user.email){
+			$scope.errorLoginEmail = "The email can't be empty!."
+		}else if(!$scope.user.password){
+			$scope.errorLoginPass = "The password can't be empty!."
+		}else{
+			loginService.login(function(dataResponse){
+				angular.element(document).triggerHandler('click');
+				$scope.user['email'] = '';
+				$scope.user['email'] = '';
+			},jsonString,$scope);
+			$( '#login_menu' ).toggleClass('open');
+		}
 
 	};
 
 	$scope.logout = function() {
 		logoutService.logout(function(dataResponse){
-			console.log(dataResponse);
 		});
 	};
 
