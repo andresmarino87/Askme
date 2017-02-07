@@ -1,8 +1,8 @@
 var app = angular.module('askme', []);
 
 app.constant('config', {
-//	"URL": "https://askme-ruby.herokuapp.com/",
-	"URL": "http://localhost:3000/",
+	"URL": "https://askme-ruby.herokuapp.com/",
+//	"URL": "http://localhost:3000/",
 });
 
 app.directive('validPasswordC', function() {
