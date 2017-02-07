@@ -5,6 +5,11 @@ app.constant('config', {
 //	"URL": "http://localhost:3000/",
 });
 
+/**
+ *  All services
+**/
+
+//Get all questions
 app.service('getQuestionsService',['$http', 'config', function($http, config) {
 	this.getData = function(callbackFunc) {
 		$http({
@@ -19,6 +24,7 @@ app.service('getQuestionsService',['$http', 'config', function($http, config) {
 	};
 }]);
 
+//Get a question with answers
 app.service('getAnswersService',['$http', 'config', function($http, config) {
 	this.getAnswers = function(callbackFunc, id) {
 		$http({
@@ -33,6 +39,7 @@ app.service('getAnswersService',['$http', 'config', function($http, config) {
 	};
 }]);
 
+//Sign up
 app.service('signupService',['$http', 'config', function($http, config) {
 	this.signup = function(callbackFunc, user, $scope) {
 		$http({
@@ -59,7 +66,7 @@ app.service('signupService',['$http', 'config', function($http, config) {
 	};
 }]);
 
-
+//login
 app.service('loginService',['$http', 'config', function($http, config) {
 	this.login = function(callbackFunc, user, $scope) {
 		$http({
@@ -86,6 +93,7 @@ app.service('loginService',['$http', 'config', function($http, config) {
 	};
 }]);
 
+//logout
 app.service('logoutService',['$http', 'config', function($http, config) {
 	this.logout = function(callbackFunc) {
 		$http({
@@ -100,6 +108,7 @@ app.service('logoutService',['$http', 'config', function($http, config) {
 	};
 }]);
 
+// post a question
 app.service('askQuestionService',['$http', 'config', function($http, config) {
 	this.postQuestion = function(callbackFunc, question, $scope ) {
 		$http({
@@ -126,6 +135,7 @@ app.service('askQuestionService',['$http', 'config', function($http, config) {
 	};
 }]);
 
+//post an answer
 app.service('answerQuestionService',['$http', 'config', function($http, config) {
 	this.postAnswer = function(callbackFunc, id, question, $scope) {
 		$http({
@@ -154,7 +164,9 @@ app.service('answerQuestionService',['$http', 'config', function($http, config) 
 	};
 }]);
 
-
+/**
+*	Controller
+**/
 app.controller('questionCtrl', 
 	['$scope', 'getQuestionsService', 'getAnswersService', 'loginService', 
 	'askQuestionService','answerQuestionService', 'logoutService', 'signupService', 
