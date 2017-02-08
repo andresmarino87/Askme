@@ -202,6 +202,7 @@ app.controller('questionCtrl',
 			$scope.errorConfirmPass = "The passwords do not match!.";
 		}else{
 			signupService.signup(function(dataResponse){
+				$scope.isLoggedIn = dataResponse.data.email;
 				angular.element(document).triggerHandler('click');
 				$scope.user.email = '';
 				$scope.user.password = '';
@@ -222,6 +223,7 @@ app.controller('questionCtrl',
 			$scope.errorLoginPass = "The password can't be empty!.";
 		}else{
 			loginService.login(function(dataResponse){
+				$scope.isLoggedIn = dataResponse.data.email;
 				angular.element(document).triggerHandler('click');
 				$scope.user.email = '';
 				$scope.user.password = '';
@@ -233,6 +235,7 @@ app.controller('questionCtrl',
 
 	$scope.logout = function() {
 		logoutService.logout(function(dataResponse){
+			$scope.isLoggedIn = "";
 		});
 	};
 
