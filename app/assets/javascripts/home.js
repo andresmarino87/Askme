@@ -185,9 +185,9 @@ app.controller('questionCtrl',
 	};
 
 	$scope.sign_up = function() {
-		$scope.errorRegEmail = "";
-		$scope.errorRegPass = "";
-		$scope.errorConfirmPass = "";
+		$scope.errorRegEmail = null;
+		$scope.errorRegPass = null;
+		$scope.errorConfirmPass = null;
 
 		var obj = {};
 		obj["user"] = $scope.user;
@@ -204,16 +204,16 @@ app.controller('questionCtrl',
 			signupService.signup(function(dataResponse){
 				$scope.isLoggedIn = dataResponse.data.email;
 				angular.element(document).triggerHandler('click');
-				$scope.user.email = '';
-				$scope.user.password = '';
-				$scope.user.confirm_password = "";
+				$scope.user.email = null;
+				$scope.user.password = null;
+				$scope.user.confirm_password = null;
 			},jsonString, $scope);
 		}
 	};
 
 	$scope.login = function() {
-		$scope.errorLoginEmail = "";
-		$scope.errorLoginPass = "";
+		$scope.errorLoginEmail = null;
+		$scope.errorLoginPass = null;
 		var obj = {};
 		obj["user"] = $scope.user;
 		var jsonString= JSON.stringify(obj);
@@ -225,8 +225,8 @@ app.controller('questionCtrl',
 			loginService.login(function(dataResponse){
 				$scope.isLoggedIn = dataResponse.data.email;
 				angular.element(document).triggerHandler('click');
-				$scope.user.email = '';
-				$scope.user.password = '';
+				$scope.user.email = null;
+				$scope.user.password = null;
 			},jsonString,$scope);
 			$( '#login_menu' ).toggleClass('open');
 		}
@@ -235,19 +235,19 @@ app.controller('questionCtrl',
 
 	$scope.logout = function() {
 		logoutService.logout(function(dataResponse){
-			$scope.isLoggedIn = "";
+			$scope.isLoggedIn = null;
 		});
 	};
 
 	$scope.askQuestion = function(){
-		$scope.errorQuestion = "";
+		$scope.errorQuestion = null;
 		var params = {};
 		params["question"] = $scope.question;
 		var jsonParams = JSON.stringify(params);
 		if($scope.question){
 			askQuestionService.postQuestion(function(dataResponse){
 				$scope.questions.unshift(dataResponse.data);
-				$scope.question = '';
+				$scope.question = null;
 			},jsonParams, $scope);
 		}else{
 			$scope.errorQuestion = "The question can't be empty!.";
@@ -255,14 +255,14 @@ app.controller('questionCtrl',
 	};
 
 	$scope.answerQuestion = function(){
-		$scope.errorAnswer = "";
+		$scope.errorAnswer = null
 		var params = {};
 		params["answer"] = $scope.answer;
 		var jsonParams = JSON.stringify(params);
 		if($scope.answer){
 			answerQuestionService.postAnswer(function(dataResponse){
 				$scope.answers.unshift(dataResponse.data);
-				$scope.answer = "";
+				$scope.answer = null;
 			},$scope.questionSelected.id,jsonParams, $scope);
 		}else{
 			$scope.errorAnswer = "The answer can't be empty!.";
