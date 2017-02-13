@@ -78,7 +78,6 @@ app.service('loginService',['$http', 'config', function($http, config) {
 			data: user,
 			dataType: 'json',
 		}).then(function (success){
-			console.log(success);
 			callbackFunc(success);
 		}, function (error){
 			switch(error.status){
