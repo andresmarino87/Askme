@@ -71,11 +71,14 @@ app.service('loginService',['$http', 'config', function($http, config) {
 	this.login = function(callbackFunc, user, $scope) {
 		$http({
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json',
+       		'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
+       	},
 			url: config.URL+'users/sign_in.json',
 			data: user,
 			dataType: 'json',
 		}).then(function (success){
+			console.log(success);
 			callbackFunc(success);
 		}, function (error){
 			switch(error.status){
@@ -98,7 +101,9 @@ app.service('logoutService',['$http', 'config', function($http, config) {
 	this.logout = function(callbackFunc) {
 		$http({
 			method: 'DELETE',
-			headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json',
+       		'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
+       	},
 			url: config.URL+'users/sign_out.json',
 		}).then(function (success){
 			callbackFunc(success);
@@ -113,7 +118,9 @@ app.service('askQuestionService',['$http', 'config', function($http, config) {
 	this.postQuestion = function(callbackFunc, question, $scope ) {
 		$http({
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json'},
+			headers: { 'Content-Type': 'application/json',
+       		'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
+       	},
 			url: config.URL+'questions/',
 			data: question,
 			dataType: 'json',
@@ -141,7 +148,7 @@ app.service('answerQuestionService',['$http', 'config', function($http, config) 
 		$http({
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json',
-				'X-CSRFToken':$('meta[name=csrf-token]').attr('content')
+    	   		'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
 			},
 			url: config.URL+'questions/'+id+'/answers/',
 			data: question,

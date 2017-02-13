@@ -2,10 +2,10 @@ class AnswersController < ApplicationController
 	before_action :authenticate_with_in_session!, only: [:create]
 	respond_to :json
 	
-    ##
-    # Returns the information of an specific Answer
-    #
-    # Params By url
+	##
+	# Returns the information of an specific Answer
+	#
+	# Params By url
 	#	[
 	#	  {
 	#	    "id": 1,
@@ -16,28 +16,28 @@ class AnswersController < ApplicationController
 	#	    "updated_at": "2017-02-04T19:53:40.917Z"
 	#	  }
 	#	]
-    #
-    # Returns
-    #  account: the bank account being consulted
+	#
+	# Returns
+	#  account: the bank account being consulted
 	def show
 		@answer = Answer.where(question_id: params[:question_id],id: params[:id]).order('created_at DESC')
 		render json: @answer
 	end
 
-    ##
-    # Create a new answer for a question
-    #
-    # Params By url
-    #   question_id = Question's id
-    #   
-    #   body
+	##
+	# Create a new answer for a question
+	#
+	# Params By url
+	#   question_id = Question's id
+	#
+	#   body
 	#	{
 	#		"answer":{
 	#			"answer":"The Answer is 42"
 	#		}
 	#	}
-    #
-    # Returns
+	#
+	# Returns
 	#	{
 	#	  "id": 23,
 	#	  "user_id": 1,
@@ -45,7 +45,7 @@ class AnswersController < ApplicationController
 	#	  "answer": "The Answer is 42",
 	#	  "created_at": "2017-02-07T04:24:43.145Z",
 	#	  "updated_at": "2017-02-07T04:24:43.145Z"
-	#	}    #
+	#	}
 	def create
 		@answer = current_user.answers.new(answer_params.merge(question_id: params[:question_id]))
 		if @answer.save

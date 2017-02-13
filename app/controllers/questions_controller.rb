@@ -3,19 +3,19 @@ class QuestionsController < ApplicationController
 	respond_to :json
 	
 	##
-    # Returns all questions
-    #
-    # Params 
-    #
-    # Returns
-    #  [{
-    #		"id": 1,
-    #		"user_id": 1,
-    #		"question": "is this a question?",
-    #		"created_at": "2017-02-04T18:48:07.794Z",
-    #		"updated_at": "2017-02-04T18:48:07.794Z"
-  	#	},
-  	#	{
+	# Returns all questions
+	#
+	# Params 
+	#
+	# Returns
+	#  [{
+	#		"id": 1,
+	#		"user_id": 1,
+	#		"question": "is this a question?",
+	#		"created_at": "2017-02-04T18:48:07.794Z",
+	#		"updated_at": "2017-02-04T18:48:07.794Z"
+	#	},
+	#	{
 	#	    "id": 2,
 	#	    "user_id": 1,
 	#	    "question": "are you sure this is a question?",
@@ -27,13 +27,13 @@ class QuestionsController < ApplicationController
 		render json: @questions
 	end
 
-    ##
-    # Returns a question with his answers
-    #
-    # Params By url
-    #   id : Question's id 
-    #
-    # Returns
+	##
+	# Returns a question with his answers
+	#
+	# Params By url
+	#   id : Question's id 
+	#
+	# Returns
 	#	[
 	#	  {
 	#	    "id": 1,
@@ -58,17 +58,17 @@ class QuestionsController < ApplicationController
 		render json: @questions, include: {answers: {only: [:id, :answer]}}
 	end
 
-    ##
-    # Create a new question
-    #
-    # Params By url
+	##
+	# Create a new question
+	#
+	# Params By url
 	#	{
 	#		"question":{
 	#			"question":"test"
 	#		}
 	#	}
 	#
-    # Returns
+	# Returns
 	#	{
 	#		"id":31,
 	#		"user_id":1,
