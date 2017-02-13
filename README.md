@@ -5,8 +5,6 @@ This project can be found live in the next link https://askme-ruby.herokuapp.com
 * Pre-requisites
 	* Ruby 2.3.1
 	* Rails 5.0.1
-	* rvm install ruby-2.3.1
-	* gem install rails
 * Used technologies
 	* Ruby
 	* Ruby on Rails
