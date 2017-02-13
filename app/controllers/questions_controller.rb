@@ -23,7 +23,7 @@ class QuestionsController < ApplicationController
 	#	    "updated_at": "2017-02-04T18:48:28.045Z"
 	#	}]
 	def index
-		@questions = Question.all
+		@questions = Question.all.order('created_at DESC')
 		render json: @questions
 	end
 

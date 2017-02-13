@@ -20,7 +20,7 @@ class AnswersController < ApplicationController
     # Returns
     #  account: the bank account being consulted
 	def show
-		@answer = Answer.where(question_id: params[:question_id],id: params[:id])
+		@answer = Answer.where(question_id: params[:question_id],id: params[:id]).order('created_at DESC')
 		render json: @answer
 	end
 
